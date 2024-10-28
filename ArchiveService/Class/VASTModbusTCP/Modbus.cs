@@ -168,14 +168,16 @@ namespace ArchiveService.Class.VASTModbusTCP
 
             try
             {
-                byte[] rVal = Read(FuncForRead, register, (ushort)(count * UshortLenth));
+                //byte[] rVal = Read(FuncForRead, register, (ushort)(count * UshortLenth));
+
+                byte[] rVal = ReadMulti(Constant.FUNC_FOR_READ, register, (ushort)(count * Constant.USHORT_LENGTH)); ;
 
                 if (rVal[0] == 0 && rVal.Length == 1)
                 {
                     return values;
                 }
 
-                for (int i = 0; i < rVal.Length; i += FloatLenth)
+                for (int i = 0; i < rVal.Length; i += Constant.FLOAT_LENGTH)
                 {
                     if (endians == Endians.Endians_2301)
                     {

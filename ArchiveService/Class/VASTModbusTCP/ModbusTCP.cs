@@ -46,12 +46,12 @@ namespace ArchiveService.Class.VASTModbusTCP
             }
             catch (SocketException se)
             {
-                new Loggings().WriteLogAdd($"Соединение по IP: {IpAddress}! {se.Message}", StatusLog.Errors);
+                new Loggings().WriteLogAdd($"Соединение по IP: {IpAddress} не установлено! ConnectTCP (SocketException) - {se.Message}", StatusLog.Errors);
                 IsConnect = false;
             }
             catch(Exception ex)
             {                
-                new Loggings().WriteLogAdd($"Соединение по IP: {IpAddress} не установлено! {ex.Message}", StatusLog.Errors);
+                new Loggings().WriteLogAdd($"Соединение по IP: {IpAddress} не установлено! ConnectTCP (Exception) - {ex.Message}", StatusLog.Errors);
                 IsConnect = false;
             }               
         }
@@ -60,6 +60,7 @@ namespace ArchiveService.Class.VASTModbusTCP
         {
             socket.Shutdown(SocketShutdown.Both);
             socket.Disconnect(true);
+            IsConnect = false;
         }
 
         public bool IsChecked()
@@ -123,14 +124,16 @@ namespace ArchiveService.Class.VASTModbusTCP
             }
             catch (SocketException se)
             {
-                IsConnect = false;
-                new Loggings().WriteLogAdd($"Соединение по IP: {IpAddress} разорвано! {se.Message}", StatusLog.Errors);
+                //IsConnect = false;
+                CloseTCP();
+                new Loggings().WriteLogAdd($"Соединение по IP: {IpAddress} разорвано! SendReceive {se.Message}", StatusLog.Errors);
                 return new byte[1] { 0 };
             }
             catch(Exception ex)
             {
-                IsConnect = false;
-                new Loggings().WriteLogAdd($"Соединение по IP: {IpAddress} разорвано! {ex.Message}", StatusLog.Errors);
+                //IsConnect = false;
+                CloseTCP();
+                new Loggings().WriteLogAdd($"Соединение по IP: {IpAddress} разорвано! SendReceive {ex.Message}", StatusLog.Errors);
                 return new byte[1] { 0 };
             }           
         }
@@ -146,36 +149,26 @@ namespace ArchiveService.Class.VASTModbusTCP
         {
             try
             {
-                //for (int i = 0; i < packet.Length; i++)
-                //{
-                //    new Loggings().WriteLogAdd($"IP: {iPAddress} - SendReceiveMulti - packet: length: {packet.Length} - i: {i} - value: {packet[i]}", StatusLog.Action);
-                //}
-
                 int count = packet[packet.Length - 1] * 2 + 9;
-
                 byte[] mbap = new byte[count];
-
 
                 socket.Send(packet);
                 socket.Receive(mbap, 0, mbap.Length, SocketFlags.None);
-
-                //for (int i = 0; i < mbap.Length; i++)
-                //{
-                //    new Loggings().WriteLogAdd($"SendReceiveMulti- mbap: length: {mbap.Length} - i: {i} - value: {mbap[i]}", StatusLog.Action);
-                //}
 
                 return mbap;
             }
             catch (SocketException se)
             {
-                IsConnect = false;
-                new Loggings().WriteLogAdd($"Соединение по IP: {IpAddress} разорвано! {se.Message}", StatusLog.Errors);
+                //IsConnect = false;
+                CloseTCP();
+                new Loggings().WriteLogAdd($"Соединение по IP: {IpAddress} разорвано! SendReceiveMulti (SocketException) - {se.Message}", StatusLog.Errors);
                 return new byte[1] { 0 };
             }
             catch (Exception ex)
             {
-                IsConnect = false;
-                new Loggings().WriteLogAdd($"Соединение по IP: {IpAddress} разорвано! {ex.Message}", StatusLog.Errors);
+                //IsConnect = false;
+                CloseTCP();
+                new Loggings().WriteLogAdd($"Соединение по IP: {IpAddress} разорвано! SendReceiveMulti (Exception) {ex.Message}", StatusLog.Errors);
                 return new byte[1] { 0 };
             }
         }
@@ -195,32 +188,12 @@ namespace ArchiveService.Class.VASTModbusTCP
             byte[] rtn;
             byte[] packet = packetModbus.MakePacket(function, register, count);
 
-            //for (int i = 0; i < packet.Length; i++)
-            //{
-            //    new Loggings().WriteLogAdd($"ReadMulti - packet: length: {packet.Length} - i: {i} - value: {packet[i]}", StatusLog.Action);
-            //}
-
             byte[] mbap = packetModbus.MakeMBAP();
-
-            //for (int i = 0; i < mbap.Length; i++)
-            //{
-            //    new Loggings().WriteLogAdd($"ReadMulti - mbap: length: {mbap.Length} - i: {i} - value: {mbap[i]}", StatusLog.Action);
-            //}
 
             byte[] response = SendReceiveMulti(mbap.Concat(packet).ToArray());
 
-            //for (int i = 0; i < response.Length; i++)
-            //{
-            //    new Loggings().WriteLogAdd($"IP: {iPAddress} - ReadMulti - rtn: length: {response.Length} - i: {i} - value: {response[i]}", StatusLog.Action);
-            //}
-
             rtn = new byte[response[8]];
             Array.Copy(response, 9, rtn, 0, rtn.Length);
-
-            //for (int i = 0; i < rtn.Length; i++)
-            //{
-            //    new Loggings().WriteLogAdd($"ReadMulti - rtn: length: {rtn.Length} - i: {i} - value: {rtn[i]}", StatusLog.Action);
-            //}
 
             return rtn;
         }

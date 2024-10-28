@@ -374,7 +374,10 @@ namespace ArchiveService.Class.Modbus_Work.VastModbus
                         //    $"StartAddress: {ModbusClientDatabase.DeviceSettings[i].StartAddress};" +
                         //    $"MeasumentValue: {ModbusClientDatabase.DeviceSettings[i].MeasumentValue}", StatusLog.Inform);
 
-                        RepositoryDatabase.WriteListDB.Add(ModbusClientDatabase.DeviceSettings[i]);
+                        if (ModbusClientDatabase.DeviceSettings[i].MeasumentValue != 0)
+                        {
+                            RepositoryDatabase.WriteListDB.Add(ModbusClientDatabase.DeviceSettings[i]);
+                        }                       
                     }
                 }
             }

@@ -16,7 +16,7 @@ namespace ArchiveService.Class.Database.MS_SQL.Table
         public static DataTable InsertArchiveLevel(DataTable dataTable, DateTime time)
         {
 
-            Stopwatch timer = Stopwatch.StartNew();
+            //Stopwatch timer = Stopwatch.StartNew();
 
             DataTable dt = new DataTable("ArchiveLevel");
 
@@ -80,8 +80,8 @@ namespace ArchiveService.Class.Database.MS_SQL.Table
                     dt.Rows.Add(newRow);
                 }               
 
-                timer.Stop();
-                int times2 = Convert.ToInt32(timer.ElapsedMilliseconds);
+                //timer.Stop();
+                //int times2 = Convert.ToInt32(timer.ElapsedMilliseconds);
                 //ConnectionMSSQL.TimeWork(times2, "InsertArchiveLevel - Создание DataTable");
 
                 return dt;
@@ -90,8 +90,8 @@ namespace ArchiveService.Class.Database.MS_SQL.Table
             {
                 new Loggings().WriteLogAdd($"Ошибка вставки данных в БД! - InsertArchiveLevel - {ex.Message}", StatusLog.Errors);
 
-                timer.Stop();
-                int times = Convert.ToInt32(timer.ElapsedMilliseconds);
+                //timer.Stop();
+                //int times = Convert.ToInt32(timer.ElapsedMilliseconds);
                 //ConnectionMSSQL.TimeWork(times, "InsertArchiveLevel - Создание DataTable");
 
                 return null;

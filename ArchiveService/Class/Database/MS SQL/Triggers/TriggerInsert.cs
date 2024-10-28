@@ -19,7 +19,11 @@ namespace ArchiveService.Class.Database.MS_SQL.Triggers
                 if (ConfigurationManager.GetCurrentVersionServer() == "MSSQL")
                 {
                     DataTable dt = Archive.InssertArchive();
-                    ConnectionMSSQL.WrireMSSQL(dt, "Archive");
+
+                    if (dt.IsInitialized)
+                    {
+                        ConnectionMSSQL.WrireMSSQL(dt, "Archive");
+                    }                   
                 }
             }
         }

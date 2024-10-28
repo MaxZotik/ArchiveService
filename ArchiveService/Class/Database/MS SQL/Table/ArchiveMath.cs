@@ -25,12 +25,13 @@ namespace ArchiveService.Class.Database.MS_SQL.Table
             foreach (var item in list)
             {
                 devTemp += (float)Math.Pow(Math.Abs(item.MVKvalue) - Math.Abs(avg), 2);
-
-                if (devTemp == 0)
-                    deviation = 0;
-                else
-                    deviation = (float)Math.Sqrt(devTemp / count);
+               
             }
+
+            if (devTemp == 0)
+                deviation = 0;
+            else
+                deviation = (float)Math.Sqrt(devTemp / count);
 
             return deviation;
         }
