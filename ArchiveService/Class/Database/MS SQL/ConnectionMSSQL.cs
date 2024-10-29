@@ -149,6 +149,32 @@ namespace ArchiveService.Class.Database.MS_SQL
             }           
         }
 
+        public static void CheckIdentRessedTable(string nameTable)
+        {
+            string SqlSelect = $"DBCC Checkident ('[{nameTable}]', Reseed, 0)";
+
+            object _lock = new object();
+
+            lock (_lock)
+            {
+                using (SqlConnection connection = new SqlConnection(ConnectionString))
+                {
+                    try
+                    {
+                        connection.Open();
+
+                        SqlCommand command = new SqlCommand(SqlSelect, connection);
+                        command.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        new Loggings().WriteLogAdd($"Ошибка сброса идентификатора таблицы {nameTable} в БД! - {ex.Message}", StatusLog.Errors);
+                    }
+                }
+            }
+        }
+
+
         /// <summary>
         /// Метод сжимает файл логов БД
         /// </summary>>

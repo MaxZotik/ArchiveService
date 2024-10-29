@@ -21,6 +21,25 @@ namespace ArchiveService.Class.Database.MS_SQL.Table
 
         public DateTime TimeTable {  get; set; }
 
+        private DateTime timeTableCheckidentReseed;
+
+        public bool CheckidentReseed 
+        { 
+            get 
+            {  
+                DateTime dt = DateTime.Now;
+
+                if (dt >= timeTableCheckidentReseed)
+                {
+                    timeTableCheckidentReseed = ArchiveMath.CreateDateTime(Time * ConstantDb.COEFFICIENT_TIME_CHECKIDENT, TimeMesuament);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            } 
+        }
         public static List<TableDB> TableDBList { get; set; }
 
         static TableDB() 
@@ -36,6 +55,7 @@ namespace ArchiveService.Class.Database.MS_SQL.Table
             TimeValue = timeValue;
             TimeAverage = timeAverage;
             TimeTable = DateTime.Now;
+            timeTableCheckidentReseed = ArchiveMath.CreateDateTime(time * ConstantDb.COEFFICIENT_TIME_CHECKIDENT, timeMesuament);
         }
     }                   
 }

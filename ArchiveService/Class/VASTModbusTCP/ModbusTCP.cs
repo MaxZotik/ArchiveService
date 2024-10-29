@@ -25,7 +25,7 @@ namespace ArchiveService.Class.VASTModbusTCP
         /// <param name="ipAddress">IP адрес "string"</param>
         /// <param name="port">Номер порта, по умолчанию - "502"</param>
         public ModbusTCP(string ipAddress, int port = 502)
-        {;
+        {
             IpAddress = ipAddress;
             iPAddress = IPAddress.Parse(ipAddress);
             endPoint = new IPEndPoint(iPAddress, port);
@@ -191,6 +191,11 @@ namespace ArchiveService.Class.VASTModbusTCP
             byte[] mbap = packetModbus.MakeMBAP();
 
             byte[] response = SendReceiveMulti(mbap.Concat(packet).ToArray());
+
+            if (response[0] == 0 && response.Length == 1 || response[8] == 0)
+            {
+                return new byte[1] { 0 };
+            }
 
             rtn = new byte[response[8]];
             Array.Copy(response, 9, rtn, 0, rtn.Length);

@@ -204,6 +204,7 @@
   <ItemGroup>
     <Compile Include="Class\Configuration\ConfigurationManager.cs" />
     <Compile Include="Class\Database\MS SQL\ConnectionMSSQL.cs" />
+    <Compile Include="Class\Database\MS SQL\ConstantDb.cs" />
     <Compile Include="Class\Database\MS SQL\MSSQLAverage.cs" />
     <Compile Include="Class\Database\MS SQL\Table\Archive.cs" />
     <Compile Include="Class\Database\MS SQL\Table\ArchiveLevel.cs" />

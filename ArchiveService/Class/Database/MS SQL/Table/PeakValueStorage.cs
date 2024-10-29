@@ -15,6 +15,26 @@ namespace ArchiveService.Class.Database.MS_SQL.Table
 
         public string TimeMesuament { get; set; }
 
+        private DateTime timeTableCheckidentReseed;
+
+        public bool CheckidentReseed
+        {
+            get
+            {
+                DateTime dt = DateTime.Now;
+
+                if (dt >= timeTableCheckidentReseed)
+                {
+                    timeTableCheckidentReseed = ArchiveMath.CreateDateTime(Time * ConstantDb.COEFFICIENT_TIME_CHECKIDENT, TimeMesuament);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
         public static List<PeakValueStorage> PeakValueStoragesList { get; set; }
 
         static PeakValueStorage()
@@ -27,6 +47,7 @@ namespace ArchiveService.Class.Database.MS_SQL.Table
             NameTable = nameTable;
             Time = time;
             TimeMesuament = timeMesuament;
+            timeTableCheckidentReseed = ArchiveMath.CreateDateTime(time * ConstantDb.COEFFICIENT_TIME_CHECKIDENT, timeMesuament);
         }
     }
 }

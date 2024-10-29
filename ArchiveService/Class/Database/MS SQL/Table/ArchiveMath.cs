@@ -82,6 +82,20 @@ namespace ArchiveService.Class.Database.MS_SQL.Table
                 return new TimeSpan(0, 0, 0);
         }
 
+        public static DateTime CreateDateTime(int time, string formatTime)
+        {
+            DateTime dt = DateTime.Now;
+
+            if (formatTime == "минута")
+                return dt.AddMinutes((double)time);
+            else if (formatTime == "час")
+                return dt.AddHours((double)time);
+            else if (formatTime == "день")
+                return dt.AddDays((double) time);
+            else
+                return dt;
+        }
+
         /// <summary>
         /// Метод переводит русский в английский
         /// </summary>

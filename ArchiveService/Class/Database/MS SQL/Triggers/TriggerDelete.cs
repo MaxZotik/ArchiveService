@@ -24,6 +24,11 @@ namespace ArchiveService.Class.Database.MS_SQL.Triggers
                     {
                         ConnectionMSSQL.DeleteTable(TableDB.TableDBList[i].TableName, TableDB.TableDBList[i].Time, TableDB.TableDBList[i].TimeMesuament);
 
+                        if (TableDB.TableDBList[i].CheckidentReseed)
+                        {
+                            ConnectionMSSQL.CheckIdentRessedTable(TableDB.TableDBList[i].TableName);
+                        }
+
                         Thread.Sleep(31000);
                     }
 
@@ -43,6 +48,11 @@ namespace ArchiveService.Class.Database.MS_SQL.Triggers
                         ConnectionMSSQL.DeleteTable(PeakValueStorage.PeakValueStoragesList[i].NameTable, 
                             PeakValueStorage.PeakValueStoragesList[i].Time, 
                             PeakValueStorage.PeakValueStoragesList[i].TimeMesuament);
+
+                        if (PeakValueStorage.PeakValueStoragesList[i].CheckidentReseed)
+                        {
+                            ConnectionMSSQL.CheckIdentRessedTable(PeakValueStorage.PeakValueStoragesList[i].NameTable);
+                        }
                     }
                 }
             }
