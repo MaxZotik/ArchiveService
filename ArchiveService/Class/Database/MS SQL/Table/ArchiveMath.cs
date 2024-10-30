@@ -91,7 +91,9 @@ namespace ArchiveService.Class.Database.MS_SQL.Table
             else if (formatTime == "час")
                 return dt.AddHours((double)time);
             else if (formatTime == "день")
-                return dt.AddDays((double) time);
+                return dt.AddDays((double)time);
+            else if (formatTime == "год")
+                return dt.AddYears(time);
             else
                 return dt;
         }
