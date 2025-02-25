@@ -11,6 +11,7 @@ using ArchiveService.Class.Enums;
 using ArchiveService.Class.Log;
 using System.Xml;
 using System.CodeDom.Compiler;
+using ArchiveService.Class.Patterns;
 
 namespace ArchiveService.Class.Database.MS_SQL
 {
@@ -206,7 +207,42 @@ namespace ArchiveService.Class.Database.MS_SQL
             }
         }
 
+        /// <summary>
+        /// Метод проверяет наличие таблицы БД
+        /// </summary>
+        /// <param name="nameTable">Название таблицы в БД</param>
+        /// <returns>Возвращает True - если такая таблица есть и False - если такой таблицы нет</returns>
+        public static bool CheckTableDb(string nameTable)
+        {
+            string SqlSelect = $@"use [{NameDb}] select name from sys.objects where name like '{nameTable}'";
 
+            object _lock = new object();
+
+            lock (_lock)
+            {
+                using (SqlConnection connection = new SqlConnection(ConnectionString))
+                {
+                    try
+                    {
+                        connection.Open();
+
+                        SqlCommand command = new SqlCommand(SqlSelect, connection);
+                        SqlDataReader reader = command.ExecuteReader();
+                        if (!reader.HasRows)
+                        {
+                            return false;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        new Loggings().WriteLogAdd(ex.Message, StatusLog.Errors);
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
 
 
 

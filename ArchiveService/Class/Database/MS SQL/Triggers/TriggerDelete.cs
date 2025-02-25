@@ -45,6 +45,11 @@ namespace ArchiveService.Class.Database.MS_SQL.Triggers
                 {
                     for (int i = 0; i < PeakValueStorage.PeakValueStoragesList.Count; i++)
                     {
+                        if (!ConnectionMSSQL.CheckTableDb(PeakValueStorage.PeakValueStoragesList[i].NameTable))
+                        {
+                            continue;
+                        }
+
                         ConnectionMSSQL.DeleteTable(PeakValueStorage.PeakValueStoragesList[i].NameTable, 
                             PeakValueStorage.PeakValueStoragesList[i].Time, 
                             PeakValueStorage.PeakValueStoragesList[i].TimeMesuament);
